@@ -13,7 +13,7 @@ body{
   align-items: center;
 }
 .calculator{
-  background-color:#990099;
+  background-color:#343034;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,6 +22,7 @@ body{
   padding:10px;
   border-radius: 10px;
   box-shadow: 2px 2px 5px black;
+  position: relative;
 }
 /*screen*/
 .screen{
@@ -30,7 +31,10 @@ body{
   margin-top: 10%;
   border-radius: 5px;
   background-color: rgb(161, 235, 161);
-  margin-bottom: auto;
+  
+}
+.answer{
+  text-align: right;
 }
 /*butttond*/
 .row-1 input{
@@ -47,6 +51,11 @@ body{
   display: flex;
   justify-content: center;
   gap:3px;
+
+}
+.btns{
+  position: absolute;
+  bottom: 10px;
 }
 h3{
   color:white;
