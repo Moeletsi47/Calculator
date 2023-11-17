@@ -142,7 +142,7 @@ function extractedFunctionOutput(){
    funcs.map((func, i) =>{
      regx = RegExp(func);
      if(regx.test(extractedFunc)){
-         Angle = eval(Angle);
+         i !== 3 ? Angle = eval(Angle) : Angle ;
          FUNCARR[i](Angle);
      }
    })
