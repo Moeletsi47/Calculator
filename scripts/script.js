@@ -1,122 +1,231 @@
-const deleteScreenVal = document.getElementById('delete');
-const screenVal =document.getElementsByClassName('screen');
-const screenColor = document.getElementsByClassName('screenColor');
-const allButtons = document.getElementsByClassName("row-1");
-let jay ;
-let dino = document.getElementById("dino");
-let sine = document.getElementById('sine');
-let result = document.getElementById('result')
+const DEL = document.getElementById('delete');
+const DISPLAY = document.getElementsByClassName('screen');
+const MODE = document.getElementById('mode');
+const CALC = document.getElementById('result');
+const ALLBUTTONS = document.getElementsByClassName("row");
+const BCL = ALLBUTTONS.length; //button collection length
+const ENTITY = document.getElementsByClassName('symbol');
+const pie = ENTITY.pie.value;// pie symbol
+const clickSound = new Audio('./sounds/click.mp3');
+let isMuted = false;
+let MUTE = document.getElementById('mute');
+
+let prevAnswer;
 let answer;
-let i , j;
-let funcIndex;
-let rightBrace;
+let funcToSearch;
+let funcStartIndex;
+let funcEndIndex;
 let Angle;
-let funcVar;
-let funcResult;
+let extractedFunc;
+let funcOutput;
 let userInput;
 let expIndex , base, exponent, charaterIndex, strArray, multipiler;
-let func = ["sin","cos","tan","pow","log"];
-let x , y; // numbers for pow function
-let comm ; //index of comma
-let entity = document.getElementsByClassName('symbol');
-let pie = entity.pie.value;
-let state = true;
+let funcs = ["sin","cos","tan","pow","log"];
+let x , y; // variables for pow function
+let comma ; //index of comma
+let state = true; // mode state
+let regx;
+let radians = false;
+let degrees = true;
 
+//setting event liteners for all buttons
+for(let i = 0; i < BCL; i++){
 
-screenColor.mode.style.borderRadius ="10px";
-screenColor.mode.style.backgroundColor ="rgb(161, 235, 161)";
-//deleting one charater on the screen 
-  deleteScreenVal.addEventListener('click', function(){
-  screenVal.onScreen.value =  screenVal.onScreen.value.slice(0,-1);
+   let div = ALLBUTTONS[i];
+   const ROB = div.children; //row of buttons
+
+  for(let j = 0; j < ROB.length; j++){
+    if(ROB[j].className !== "special"){
+      ROB[j].addEventListener('click', () =>{
+        if(state){
+        DISPLAY.screen.value += ROB[j].value;
+        }
+        // clickSound.play();
+      })
+    }
+    ROB[j].addEventListener('click', () =>{
+      clickSound.pause();
+      clickSound.currentTime = 0; 
+      clickSound.play();
+    })
+  }
+}
+//mute sound
+function toggleMute() {
+  if (isMuted) {
+    // Unmute the audio
+    clickSound.volume = 1;
+  } else {
+    // Mute the audio
+    clickSound.volume = 0;
+  }
+
+  // Toggle the mute state
+  isMuted = !isMuted;
+}
+//call mute on click
+MUTE.addEventListener('click', () => {
+  toggleMute();
+ 
 })
+
+//deleting one charater on the screen 
+  DEL.addEventListener('click', function(){
+  DISPLAY.screen.value =  DISPLAY.screen.value.slice(0,-1);
+})
+
 //changing modes
-    screenColor.mode.addEventListener('click', function(){
+  MODE.addEventListener('click', function(){
     state = !state;
-    screenVal.onScreen.style.backgroundColor =  state? "rgb(161, 235, 161)" : "black";
-    jay = "undefined";
+    DISPLAY.screen.style.backgroundColor =  state? "rgb(161, 235, 161)" : "black";
+    prevAnswer = "undefined";
      //if the state is false the calculator is off
     if(state === false){
-      screenVal.onScreen.value = "";
-      }else{
-        
-        }
-  })
-  //calculations only when the eqaul button is clicked
-  result.addEventListener('click', function(){
-
-    userInput = screenVal.onScreen.value; // user input
-    // replacing pie symbol with it's value
-    
-    userInput = userInput.replaceAll(pie, `${Math.PI.toFixed(3)}`);
-
-    // replacing "Ans" with the previous answer
-
-    userInput = userInput.replaceAll("Ans", `${jay}`);
-  
-    //searching for sine, cose , tan and pow functions
-    for(i=0; i<func.length; i++){
-        
-       do{
-        funcIndex = userInput.search(func[i]);
-        console.log(funcIndex);
-    // if sin || cos || tan || pow is part of the input
-        if(funcIndex !=-1){
-              rightBrace = userInput.indexOf(")",funcIndex);
-              Angle = userInput.substring(funcIndex+4, rightBrace); //getting the angele insie the ()
-              funcVar =  userInput.substring(funcIndex, rightBrace+1); 
-
-              if(func[i] === "sin"){
-                funcResult =  Math.sin(Angle*Math.PI/180);
-                  }else if(func[i] === "cos"){
-                    funcResult =  Math.cos(Angle*Math.PI/180);
-                      }else if(func[i] === "tan"){
-                        funcResult =  Math.tan(Angle*Math.PI/180);
-                         }else if(func[i] === "pow"){
-                           comm = Angle.indexOf(',');
-                           x = Angle.substring(0, comm);
-                           y = Angle.substring(comm+1);
-                           x = parseInt(x);
-                           y = parseInt(y);
-                           funcResult =  Math.pow(x, y);
-                            }else if(func[i] == "log"){
-                               funcResult =  Math.log(Angle);
-                             }
-            
-              funcResult = funcResult.toFixed(3);
-              userInput = userInput.replace(funcVar, funcResult);
-          }//end of if statement
-        }while(funcIndex !=-1);
-    }//end of for loop
-   
-    //searching for power ^   and doing the calculations if it exists
-    expIndex = userInput.indexOf("^");
-    if(expIndex != -1){
-        base = userInput.substring(0, expIndex);
-        exponent = userInput.substring(expIndex+1);
-        userInput = base;
-        if(exponent == 0){
-            userInput = 1;
-             }else if(exponent == 1){
-
-               }else if(exponent>1){
-                 multipiler = userInput;
-                 for(let e=1; e<exponent; e++){
-                 userInput *= multipiler;
-                   }
-                     }
-     }
-
-      answer = eval(userInput);
-      jay = answer;
-      screenVal.onScreen.value = answer;  
+      DISPLAY.screen.value = "";
+      }
+      
 })
 
-  dino.onclick = function(){
-  screenVal.onScreen.value += "Ans";
+//get userInput
+function getUserInput(){
+   userInput = DISPLAY.screen.value;
 }
+//replacing symbols with thier corresponding values values
+function replace(){
+   // replacing pie symbol with it's value
+   userInput = userInput.replaceAll(pie, `${Math.PI.toFixed(3)}`);
 
-function removeAnswer() {
-  screenVal.onScreen.classList.remove("answer");
-} 
+   // replacing "Ans" with the previous answer
+   userInput = userInput.replaceAll("Ans", `${prevAnswer}`);
+}
+/*search if a specific funtion exits in the userInput if it exists return the index of its first character
+  if it does not exist return -1 
+  */
+function searchFunction(functionName){
+      return userInput.search(functionName);
+}
+// finds the function with the parameters as iserted by the user
+function extractTheFunction(funcStartIndex){
+  funcEndIndex = userInput.indexOf(")",funcStartIndex);
+  extractedFunc =  userInput.substring(funcStartIndex, funcEndIndex+1); 
+  Angle = userInput.substring(funcStartIndex+4, funcEndIndex); 
 
- 
+}
+function sin(angle) {
+  funcOutput =  Math.sin(angle*Math.PI/180);
+}
+function cos(angle) {
+  funcOutput =  Math.cos(angle*Math.PI/180);
+}
+function tan(angle) {
+  if(angle == 90){
+    DISPLAY.screen.value= "undefined";
+    return; // stop the calculations
+  }else{
+    funcOutput =  Math.tan(angle*Math.PI/180);                            
+  }
+}
+function pow(angle) {
+  comma = angle.indexOf(',');
+  x = angle.substring(0, comma);
+  y = angle.substring(comma+1);
+  x = parseInt(x);
+  y = parseInt(y);
+  funcOutput =  Math.pow(x, y);
+}
+function log(angle) {
+  funcOutput =  Math.log(angle);
+}
+  const FUNCARR = [sin, cos, tan, pow, log];
+//find the output of the extracted function
+function extractedFunctionOutput(){
+   funcs.map((func, i) =>{
+     regx = RegExp(func);
+     if(regx.test(extractedFunc)){
+         Angle = eval(Angle);
+         FUNCARR[i](Angle);
+     }
+   })
+}
+  //calculations only when the eqaul button is clicked
+    CALC.addEventListener('click', function(){
+      
+      //get userInput
+      getUserInput();
+
+      //replacing symbols with thier corresponding values values
+      replace();
+
+      //searching for sine, cose , tan and pow functions
+      for(i=0; i<funcs.length; i++){
+          funcToSearch = funcs[i];
+        do{
+            funcStartIndex = searchFunction(funcToSearch)
+              // if sin || cos || tan || pow is part of the input
+              if(funcStartIndex !=-1){
+                extractTheFunction(funcStartIndex);
+               
+                extractedFunctionOutput();
+                //convert the function output to 3 decimal places
+               try{
+                funcOutput = funcOutput.toFixed(6);
+               }catch(error){
+                DISPLAY.screen.value = "undefined";  
+                return;
+               }
+              
+                //replace the userInput func with funcOutput
+                userInput = userInput.replace(extractedFunc, funcOutput);
+               
+            }//end of if statement
+            
+          }while(funcStartIndex !=-1);
+      }//end of for loop
+      //let tempUserInput = `${userInput}`
+   
+    //searching for exponent ^  and doing the calculations if it exists
+   // do{
+    //  expIndex = userInput.indexOf("^");
+    //  let endIndexOfExp = userInput.substring(expIndex).search(/[+\-*/]/);
+    //  let tempString = userInput.substring(0,expIndex+1);
+    //  tempString = tempString.split('').reverse().join('');
+    //  let startIndexOfBase = tempString.search(/[+\-*/]/);
+     
+    //   if(expIndex != -1){
+    //     base = userInput.substring(expIndex-startIndexOfBase+1,expIndex);
+    //     if(endIndexOfExp>0){
+    //       exponent = userInput.substring(expIndex+1,endIndexOfExp+expIndex);
+    //     }else{
+    //       exponent = userInput.substring(expIndex+1);
+    //     }
+    //    let exponentOutput;
+    //    let exponentInput  = `${base}\^${exponent}`;
+    //    console.log(base, exponent, startIndexOfBase)
+    //     if(exponent == 0){
+    //         exponentOutput = 1;
+    //     }else if(exponent == 1){
+    //       exponentOutput = base;    
+    //     }else if(exponent>1){
+    //       multipiler = base;
+    //       for(let e=1; e<exponent; e++){
+    //       base *= multipiler;
+    //         }
+    //           }
+    //           exponentOutput = base;
+    //           userInput =  userInput.replace(exponentInput, exponentOutput);
+    //  }
+   // }while(expIndex != -1);
+     if(state){
+      try{
+      answer = eval(userInput);
+      answer= answer.toFixed(3)
+      prevAnswer = answer;
+      DISPLAY.screen.value = answer; 
+      }catch(error){
+        DISPLAY.screen.value = "undefined";
+        return;
+      }
+    }
+       
+      
+})

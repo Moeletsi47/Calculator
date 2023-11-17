@@ -3,71 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta property="og:title" content="scientific calculator">
+  <meta property="og:description" content="a scientific calculator for max precision">
+  <meta property="og:image" content="https://moeletsi47.github.io/Calculator/images/opengraph.png">
+  <link rel="icon" type="image/x-icon" href="./images/favicon.png">
+
+  <title>Jason | calculator</title>
   <link rel="stylesheet" href="./stylesheets/styles.css">
 </head>
 <body>
   <!--calculator container-->
+
   <div class="main-box">
-    <form>
+    <div class="parent">
+     
+      <div class="top">
+      </div>
+    <form class="calculator">
     <!--calculator-->
-    <div class="calculator">
+    <!-- <div class=""> -->
       <h3><i>Jason</i></h3>
       <!--screen-->
-       <input type="text" class="screen" name="onScreen">   
+       <input type="text" class="screen" name="screen" disabled></input> 
       <!--buttons--> 
-      <div class="btns">
-       <div class="row-1">
-        <input type="button" value="("    onclick="onScreen.value += '(' ">
-        <input type="button" value=")"    onclick="onScreen.value += ')' ">
-        <input type="button" value="pow"  onclick="onScreen.value += 'pow(' ">
-        <input type="button" value="exp" onclick="onScreen.value += '^' " >
-        <input type="button" value="On"  name="mode" class="screenColor">
-       </div> 
-
-       <div class="row-1">
-        <input type="button" value=","    onclick="onScreen.value += ',' ">
-        <input type="button" value="sin"  id="sine" onclick="onScreen.value += 'sin(' ">
-        <input type="button" value="cos"  onclick="onScreen.value += 'cos(' ">
-        <input type="button" value="tan"  onclick="onScreen.value += 'tan(' ">
-        <input type="button" value="log"  onclick="onScreen.value += 'log(' ">
-       </div> 
-
-       <div class="row-1">
-        <input type="button" value="7"    onclick="onScreen.value += '7' ">
-        <input type="button" value="8"    onclick="onScreen.value += '8' ">
-        <input type="button" value="9"    onclick="onScreen.value += '9' ">
-        <input type="button" value="DEL"  id="delete">
-        <input type="button" value="AC"   onclick="onScreen.value = '' ">
-       </div> 
-
-       <div class="row-1">
-        <input type="button" value="4"    onclick="onScreen.value += '4' ">
-        <input type="button" value="5"    onclick="onScreen.value += '5' ">
-        <input type="button" value="6"    onclick="onScreen.value += '6' ">
-        <input type="button" value="*"    onclick="onScreen.value += '*' ">
-        <input type="button" value="/"    onclick="onScreen.value += '/' ">
-       </div> 
-
-       <div class="row-1">
-        <input type="button" value="1" onclick="onScreen.value += '1' ">
-        <input type="button" value="2" onclick="onScreen.value += '2' ">
-        <input type="button" value="3" onclick="onScreen.value += '3' ">
-        <input type="button" value="+" onclick="onScreen.value += '+' ">
-        <input type="button" value="-" onclick="onScreen.value += '-' ">
-       </div> 
-
-       <div class="row-1">
-        <input type="button" value="0"   onclick="onScreen.value   += '0' ">
-        <input type="button" value="."   onclick="onScreen.value   += '.' ">
-        <input type="button" value="&pi;" class="symbol" name="pie" onclick="onScreen.value  += '&pi;' ">
-        <input type="button" value="Ans" id="dino"  name = "robi"  >
-        <input type="button" value="="    id="result">
-       </div> 
+      <div class="buttonsContainer">
+        <div class="controls">
+        <input type="button" id="mute" value="mute"></input>
+        <input type="button" id="rad" value="rad" disabled></input>
+        <input type="button" id="deg" value="deg" disabled></input>
       </div>
-    </div> 
+       <div class="row">
+        <input type="button" value="(">
+        <input type="button" value=")">
+        <input type="button" value="pow">
+        <input type="button" value="exp" class="special" onclick="screen.value+='^'" disabled>
+        <input type="button" value="On"  name="mode" class="special" id="mode">
+       </div> 
+
+       <div class="row">
+        <input type="button" value=",">
+        <input type="button" value="sin"  id="sine">
+        <input type="button" value="cos">
+        <input type="button" value="tan">
+        <input type="button" value="log">
+       </div> 
+
+       <div class="row">
+        <input type="button" value="7">
+        <input type="button" value="8">
+        <input type="button" value="9">
+        <input type="button" value="DEL" id="delete" class="special">
+        <input type="button" value="AC" class="special" onclick="screen.value=''">
+       </div>
+       
+        <div class="row">
+        <input type="button" value="4">
+        <input type="button" value="5">
+        <input type="button" value="6">
+        <input type="button" value="*">
+        <input type="button" value="/">
+       </div> 
+
+       <div class="row">
+        <input type="button" value="1">
+        <input type="button" value="2">
+        <input type="button" value="3">
+        <input type="button" value="+">
+        <input type="button" value="-">
+       </div> 
+
+       <div class="row">
+        <input type="button" value="0">
+        <input type="button" value=".">
+        <input type="button" value="&pi;" class="symbol" name="pie">
+        <input type="button" value="Ans"  id="prevAnswerButton">
+        <input type="button" value="="    id="result" class="special">
+       </div> 
+
+       <!-- </div> -->
+      </div>
+    </form> 
+   </div>
   </div> 
-</form> 
+
+
 
   <script src="./scripts/script.js"></script>
 </body>
